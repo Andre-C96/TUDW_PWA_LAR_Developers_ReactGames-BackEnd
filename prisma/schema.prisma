@@ -16,5 +16,40 @@ model user {
   username  String     @unique  
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  favorites favorite[]
 }
 
+model boardgame {
+  id        Int        @id @default(autoincrement())
+  imageURL  String     
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  favorites           favorite[]
+  boardgameTraslations boardgameTraslation[]
+}
+
+model favorite {
+  id          Int        @id @default(autoincrement())
+  userId      Int 
+  boardgameId Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        user      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  boardgame   boardgame @relation(fields: [boardgameId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, boardgameId])
+}
+
+model boardgameTraslation {
+  id          Int        @id @default(autoincrement())
+  boardgameId Int
+  language    String
+  title       String
+  description String
+  category    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  boardgame   boardgame @relation(fields: [boardgameId], references: [id], onDelete: Cascade)
+}
