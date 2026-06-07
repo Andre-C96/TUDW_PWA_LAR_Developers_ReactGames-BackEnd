@@ -25,7 +25,7 @@ model boardgame {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   favorites           favorite[]
-  boardgameTraslations boardgameTraslation[]
+  boardgameTranslations boardgameTranslation[]
 }
 
 model favorite {
@@ -41,7 +41,7 @@ model favorite {
   @@unique([userId, boardgameId])
 }
 
-model boardgameTraslation {
+model boardgameTranslation {
   id          Int        @id @default(autoincrement())
   boardgameId Int
   language    String
