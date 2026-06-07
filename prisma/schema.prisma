@@ -45,7 +45,7 @@ model boardgameTraslation {
   id          Int        @id @default(autoincrement())
   boardgameId Int
   language    String
-  title       String
+  name        String
   description String
   category    String
   createdAt   DateTime @default(now())
