@@ -137,8 +137,46 @@ const createFavoriteService = async (data) => {
   });
 };
 
+const deleteFavoriteService = async (id, language = DEFAULT_LANGUAGE) => {
+  const favorite = await prisma.favorite.findFirst({
+    where: {
+      id: Number(id),
+      userId: DEFAULT_USER_ID,
+    },
+    include: {
+      user: true,
+      boardgame: {
+        include: {
+          boardgameTranslations: true,
+        },
+      },
+    },
+  });
+
+  if (!favorite) {
+    const error = new Error('Recurso no encontrado');
+    error.status = 404;
+    throw error;
+  }
+
+  const deleted = await prisma.favorite.delete({
+    where: { id: Number(id) },
+    include: {
+      user: true,
+      boardgame: {
+        include: {
+          boardgameTranslations: true,
+        },
+      },
+    },
+  });
+
+  return formatFavorite(deleted, language);
+};
+
 module.exports = {
   getFavoritesService,
   getFavoriteByIdService,
   createFavoriteService,
+  deleteFavoriteService,
 };

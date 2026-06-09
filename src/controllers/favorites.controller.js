@@ -2,6 +2,7 @@ const {
   createFavoriteService,
   getFavoriteByIdService,
   getFavoritesService,
+  deleteFavoriteService,
 } = require('../services/favorites.service');
 
 const DEFAULT_LANGUAGE = 'es';
@@ -54,8 +55,25 @@ const createFavoriteController = async (req, res) => {
   }
 };
 
+const deleteFavoriteController = async (req, res) => {
+  try {
+    const favorite = await deleteFavoriteService(req.params.id, getLanguageFromQuery(req));
+
+    return res.status(200).json({
+      success: true,
+      message: 'Favorite deleted successfully',
+      data: favorite,
+    });
+  } catch (error) {
+    return res.status(error.status || 500).json({
+      error: error.message || 'Internal server error',
+    });
+  }
+};
+
 module.exports = {
   getFavoritesController,
   getFavoriteByIdController,
   createFavoriteController,
+  deleteFavoriteController,
 };
