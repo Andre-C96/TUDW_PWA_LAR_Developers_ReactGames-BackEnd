@@ -41,7 +41,7 @@ const getFavoriteByIdController = async (req, res) => {
 
 const createFavoriteController = async (req, res) => {
   try {
-    const favorite = await createFavoriteService(req.body);
+     const favorite = await createFavoriteService(req.body, getLanguageFromQuery(req));
 
     return res.status(201).json({
       success: true,

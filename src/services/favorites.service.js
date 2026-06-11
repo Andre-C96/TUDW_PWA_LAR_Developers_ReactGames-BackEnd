@@ -76,7 +76,7 @@ const getFavoriteByIdService = async (id, language = DEFAULT_LANGUAGE) => {
   });
 
   if (!favorite) {
-    const error = new Error('Recurso no encontrado');
+    const error = new Error('Resource not found');
     error.status = 404;
     throw error;
   }
@@ -84,7 +84,7 @@ const getFavoriteByIdService = async (id, language = DEFAULT_LANGUAGE) => {
   return formatFavorite(favorite, language);
 };
 
-const createFavoriteService = async (data) => {
+const createFavoriteService = async (data,language = DEFAULT_LANGUAGE) => {
   const userId = DEFAULT_USER_ID;
   const boardgameId = Number(data.boardgameId);
 
@@ -94,7 +94,7 @@ const createFavoriteService = async (data) => {
   });
 
   if (!existingUser) {
-    const error = new Error('El usuario no existe');
+    const error = new Error('User not found');
     error.status = 404;
     throw error;
   }
@@ -105,7 +105,7 @@ const createFavoriteService = async (data) => {
   });
 
   if (!existingBoardgame) {
-    const error = new Error('El boardgame no existe');
+    const error = new Error('Boardgame not found');
     error.status = 404;
     throw error;
   }
@@ -120,21 +120,25 @@ const createFavoriteService = async (data) => {
   });
 
   if (existingFavorite) {
-    const error = new Error('El favorito ya existe');
+    const error = new Error('The favorite already exists');
     error.status = 409;
     throw error;
   }
-
-  return prisma.favorite.create({
+  const newFavorite = await prisma.favorite.create({
     data: {
       userId,
       boardgameId,
     },
     include: {
       user: true,
-      boardgame: true,
+      boardgame: {
+        include: {
+          boardgameTranslations: true 
+        }
+      },
     },
   });
+  return formatFavorite(newFavorite, language);
 };
 
 const deleteFavoriteService = async (id, language = DEFAULT_LANGUAGE) => {
@@ -154,7 +158,7 @@ const deleteFavoriteService = async (id, language = DEFAULT_LANGUAGE) => {
   });
 
   if (!favorite) {
-    const error = new Error('Recurso no encontrado');
+    const error = new Error('Resource not found');
     error.status = 404;
     throw error;
   }

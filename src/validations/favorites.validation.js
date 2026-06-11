@@ -3,22 +3,22 @@ const validateCreateFavorite = (req, res, next) => {
 
   if (req.body == null || typeof req.body !== 'object' || Array.isArray(req.body)) {
     return res.status(400).json({
-      error: 'Datos inválidos',
-      details: [{ field: 'body', message: 'El body no puede estar vacío' }],
+      error: 'Invalid data',
+      details: [{ field: 'body', message: 'The body must be a JSON object' }],
     });
   }
 
   const { boardgameId } = req.body;
 
   if (boardgameId === undefined || boardgameId === null || boardgameId === '') {
-    errors.push({ field: 'boardgameId', message: 'El boardgameId es obligatorio' });
-  } else if (!Number.isInteger(Number(boardgameId))) {
-    errors.push({ field: 'boardgameId', message: 'El boardgameId debe ser un número entero válido' });
+    errors.push({ field: 'boardgameId', message: 'The boardgameId is required' });
+  }  else if (!Number.isInteger(Number(boardgameId)) || Number(boardgameId) <= 0) {
+    errors.push({ field: 'boardgameId', message: 'The boardgameId must be a valid positive integer' });
   }
 
   if (errors.length > 0) {
     return res.status(400).json({
-      error: 'Datos inválidos',
+      error: 'Invalid data',
       details: errors,
     });
   }
@@ -33,8 +33,8 @@ module.exports = {
 
     if (!Number.isInteger(favoriteId) || favoriteId <= 0) {
       return res.status(400).json({
-        error: 'Datos inválidos',
-        details: [{ field: 'id', message: 'El id debe ser un número entero válido' }],
+        error: 'Invalid data',
+        details: [{ field: 'id', message: 'The id must be a valid positive integer' }],
       });
     }
 
