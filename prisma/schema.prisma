@@ -11,12 +11,22 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  ADMIN
+  USUARIO
+}
+
 model user {
-  id        Int        @id @default(autoincrement())
-  username  String     @unique  
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  favorites favorite[]
+  id            Int        @id @default(autoincrement())
+  email         String   @unique
+  password      String
+  role          Role     @default(USUARIO)  
+  refreshToken  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  deletedAt     DateTime? 
+  favorites     favorite[]
+  
 }
 
 model boardgame {
@@ -24,12 +34,13 @@ model boardgame {
   imageURL  String     
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  favorites           favorite[]
+  deletedAt DateTime? 
+  favorites favorite[]
   boardgameTranslations boardgameTranslation[]
 }
 
 model favorite {
-  id          Int        @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   userId      Int 
   boardgameId Int
   createdAt   DateTime @default(now())
@@ -50,6 +61,7 @@ model boardgameTranslation {
   category    String[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  deletedAt   DateTime? 
 
   boardgame   boardgame @relation(fields: [boardgameId], references: [id], onDelete: Cascade)
 }
