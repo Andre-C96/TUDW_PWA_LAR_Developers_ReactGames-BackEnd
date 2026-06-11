@@ -1,4 +1,4 @@
-export const errorHandlerMiddleware = (err, req, res, next) => {
+const errorHandlerMiddleware = (err, req, res, next) => {
     if (res.headersSent) {
         return next(err);
     }
@@ -12,3 +12,5 @@ export const errorHandlerMiddleware = (err, req, res, next) => {
         message: errorMessage
     });
 };
+
+module.exports = errorHandlerMiddleware;
