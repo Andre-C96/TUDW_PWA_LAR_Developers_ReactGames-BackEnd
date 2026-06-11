@@ -888,15 +888,15 @@ async function main() {
     console.log("Creando usuarios de prueba...");
     await prisma.user.createMany({
         data: [
-            {username: "Linda"},
-            {username: "Andrea"},
-            {username: "Ramiro"}
+            {email: "linda@lar.com", password: "password123"},
+            {email: "andrea@lar.com", password: "password124"},
+            {email: "ramiro@lar.com", password: "password125"}
         ]
     });
 
     const testUser = await prisma.user.findUnique({
         where: {
-            username: "Linda"
+            email: "linda@lar.com"
         }
     });
 
