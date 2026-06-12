@@ -31,6 +31,7 @@ const formatBoardgame = (boardgame, language) => {
   };
 };
 
+// Obtener
 const getBoardgamesService = async (language = DEFAULT_LANGUAGE) => {
   const boardgames = await prisma.boardgame.findMany({
     where: {
@@ -47,6 +48,7 @@ const getBoardgamesService = async (language = DEFAULT_LANGUAGE) => {
   return boardgames.map((boardgame) => formatBoardgame(boardgame, language));
 };
 
+// Obtener por ID
 const getBoardgameByIdService = async (id, language = DEFAULT_LANGUAGE) => {
   const boardgame = await prisma.boardgame.findFirst({
     where: {
@@ -67,6 +69,7 @@ const getBoardgameByIdService = async (id, language = DEFAULT_LANGUAGE) => {
   return formatBoardgame(boardgame, language);
 };
 
+// Crear
 const createBoardgameService = async (data, language = DEFAULT_LANGUAGE) => {
   const newBoardgame = await prisma.boardgame.create({
     data: {
@@ -83,6 +86,7 @@ const createBoardgameService = async (data, language = DEFAULT_LANGUAGE) => {
   return formatBoardgame(newBoardgame, language);
 };
 
+// Actualizar
 const updateBoardgameService = async (id, data, language = DEFAULT_LANGUAGE) => {
   const existingBoardgame = await prisma.boardgame.findFirst({
     where: {
@@ -114,6 +118,7 @@ const updateBoardgameService = async (id, data, language = DEFAULT_LANGUAGE) => 
   return formatBoardgame(updatedBoardgame, language);
 };
 
+// Borrar
 const deleteBoardgameService = async (id, language = DEFAULT_LANGUAGE) => {
   const boardgame = await prisma.boardgame.findFirst({
     where: {
