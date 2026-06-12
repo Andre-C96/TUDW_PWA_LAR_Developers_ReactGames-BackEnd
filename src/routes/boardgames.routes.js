@@ -6,6 +6,7 @@ const {
     createBoardgameController,
     updateBoardgameController,
     deleteBoardgameController,
+    restoreBoardgameController
 } = require('../controllers/boardgames.controller');
 
 const {
@@ -23,5 +24,7 @@ router.post('/', validateBoardgameData, createBoardgameController);
 router.put('/:id', validateBoardgameId, validateBoardgameData, updateBoardgameController);
 
 router.delete('/:id', validateBoardgameId, deleteBoardgameController);
+
+router.patch('/:id/restore', validateBoardgameId, restoreBoardgameController);
 
 module.exports = router;

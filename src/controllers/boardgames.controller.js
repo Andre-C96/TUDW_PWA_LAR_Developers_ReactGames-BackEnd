@@ -4,6 +4,7 @@ const {
     createBoardgameService,
     updateBoardgameService,
     deleteBoardgameService,
+    restoreBoardgameService
 } = require('../services/boardgames.service');
 
 
@@ -103,10 +104,31 @@ const deleteBoardgameController = async (req, res) => {
     }
 };
 
+const restoreBoardgameController = async (req, res) => {
+    try {
+        const boardgame = await restoreBoardgameService(
+            req.params.id,
+            req.query.language
+        );
+
+        return res.status(200).json({
+            success: true,
+            message: 'Boardgame restored successfully',
+            data: boardgame,
+        });
+    } catch (error) {
+        return res.status(error.status || 500).json({
+            success: false,
+            message: error.message || 'Internal server error',
+        });
+    }
+};
+
 module.exports = {
     getBoardgamesController,
     getBoardgameByIdController,
     createBoardgameController,
     updateBoardgameController,
     deleteBoardgameController,
+    restoreBoardgameController
 };

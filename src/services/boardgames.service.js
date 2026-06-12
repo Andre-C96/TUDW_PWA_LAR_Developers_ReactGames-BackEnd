@@ -150,10 +150,43 @@ const deleteBoardgameService = async (id, language = DEFAULT_LANGUAGE) => {
   return formatBoardgame(deletedBoardgame, language);
 };
 
+// Restaurar
+const restoreBoardgameService = async (id, language = DEFAULT_LANGUAGE) => {
+    const boardgame = await prisma.boardgame.findUnique({
+        where: { id: Number(id) }
+    });
+
+    if (!boardgame) {
+        const error = new Error('Resource not found');
+        error.status = 404;
+        throw error;
+    }
+
+    if (!boardgame.deletedAt) {
+        const error = new Error('The boardgame is already active');
+        error.status = 400; 
+        throw error;
+    }
+
+    
+    const restoredBoardgame = await prisma.boardgame.update({
+        where: { id: Number(id) },
+        data: {
+            deletedAt: null 
+        },
+        include: {
+            boardgameTranslations: true
+        }
+    });
+
+    return formatBoardgame(restoredBoardgame, language);
+};
+
 module.exports = {
   getBoardgamesService,
   getBoardgameByIdService,
   createBoardgameService,
   updateBoardgameService,
   deleteBoardgameService,
+  restoreBoardgameService
 };
