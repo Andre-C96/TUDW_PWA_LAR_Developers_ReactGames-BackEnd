@@ -43,3 +43,8 @@ Siga estos pasos para replicar el entorno de desarrollo:
 git clone [https://github.com/Andre-C96/TUDW_PWA_LAR_Developers_ReactGames-BackEnd.git](https://github.com/Andre-C96/TUDW_PWA_LAR_Developers_ReactGames-BackEnd.git)
 cd TUDW_PWA_LAR_Developers_ReactGames-BackEnd
 git switch developer
+
+
+_________________________________________________________________________________________________
+
+LAR DEVELOPERS

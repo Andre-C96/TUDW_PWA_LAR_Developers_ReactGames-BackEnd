@@ -4,10 +4,64 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  USUARIO
+}
+
+model user {
+  id            Int        @id @default(autoincrement())
+  email         String   @unique
+  password      String
+  role          Role     @default(USUARIO)  
+  refreshToken  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  deletedAt     DateTime? 
+  favorites     favorite[]
+  
+}
+
+model boardgame {
+  id        Int        @id @default(autoincrement())
+  imageURL  String     
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime? 
+  favorites favorite[]
+  boardgameTranslations boardgameTranslation[]
+}
+
+model favorite {
+  id          Int      @id @default(autoincrement())
+  userId      Int 
+  boardgameId Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        user      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  boardgame   boardgame @relation(fields: [boardgameId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, boardgameId])
+}
+
+model boardgameTranslation {
+  id          Int        @id @default(autoincrement())
+  boardgameId Int
+  language    String
+  name        String
+  description String
+  category    String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  deletedAt   DateTime? 
+
+  boardgame   boardgame @relation(fields: [boardgameId], references: [id], onDelete: Cascade)
 }
