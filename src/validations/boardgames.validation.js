@@ -1,19 +1,25 @@
 const validateBoardgameData = (req, res, next) => {
-    const { imageURL, translations } = req.body;
+    if (req.body == null || typeof req.body !== 'object' || Array.isArray(req.body)) {
+        return res.status(400).json({
+            success: false,
+            message: 'The request body must be a JSON object.'
+        });
+    }
 
+    const { imageURL, translations } = req.body;
     // Imagen 
     if (!imageURL || typeof imageURL !== 'string' || imageURL.trim() === '') {
-        return res.status(400).json({ 
-            success: false, 
-            message: 'The imageURL field is required and must be a valid string.' 
+        return res.status(400).json({
+            success: false,
+            message: 'The imageURL field is required and must be a valid string.'
         });
     }
 
     // Traducciones en array
     if (!translations || !Array.isArray(translations) || translations.length === 0) {
-        return res.status(400).json({ 
-            success: false, 
-            message: 'You must include at least one translation as an array.' 
+        return res.status(400).json({
+            success: false,
+            message: 'You must include at least one translation as an array.'
         });
     }
 
@@ -28,7 +34,7 @@ const validateBoardgameData = (req, res, next) => {
             });
         }
 
-        if (!t.language || typeof t.language !== 'string') {
+        if (!t.language || typeof t.language !== 'string' || t.language.trim() === '') {
             return res.status(400).json({ success: false, message: `The language field is missing in translation number ${i + 1}.` });
         }
         if (!t.name || typeof t.name !== 'string' || t.name.trim() === '') {
@@ -38,8 +44,8 @@ const validateBoardgameData = (req, res, next) => {
             return res.status(400).json({ success: false, message: `The description field is missing in translation number ${i + 1}.` });
         }
         // Category en array
-        if (!t.category || !Array.isArray(t.category) || t.category.length === 0) {
-            return res.status(400).json({ success: false, message: `The category field must be an array with at least one item in translation number ${i + 1}.` });
+         if (!Array.isArray(t.category) || t.category.length === 0 || t.category.some((c) => typeof c !== 'string' || c.trim() === '')) {
+            return res.status(400).json({ success: false, message: `The category field must be an array of non-empty strings with at least one item in translation number ${i + 1}.` });
         }
     }
 
@@ -53,13 +59,13 @@ const validateBoardgameId = (req, res, next) => {
     const boardgameId = Number(id);
 
     if (!id || !Number.isInteger(boardgameId) || boardgameId <= 0) {
-        return res.status(400).json({ 
-            success: false, 
-            message: 'The ID provided in the URL is not valid. It must be a positive integer.' 
+        return res.status(400).json({
+            success: false,
+            message: 'The ID provided in the URL is not valid. It must be a positive integer.'
         });
     }
 
     next();
 };
 
-module.exports = {validateBoardgameData, validateBoardgameId};
+module.exports = { validateBoardgameData, validateBoardgameId };
