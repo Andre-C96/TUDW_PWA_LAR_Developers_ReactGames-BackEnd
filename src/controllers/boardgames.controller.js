@@ -10,11 +10,16 @@ const {
 
 const getBoardgamesController = async (req, res) => {
     try {
-        const boardgames = await getBoardgamesService(req.query.language);
+        
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 15;
+
+        const result = await getBoardgamesService(req.query.language, page, limit);
 
         return res.status(200).json({
             success: true,
-            data: boardgames,
+            meta: result.meta, 
+            data: result.data, 
         });
     } catch (error) {
         return res.status(error.status || 500).json({
