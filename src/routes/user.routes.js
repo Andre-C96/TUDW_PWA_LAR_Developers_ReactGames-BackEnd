@@ -5,9 +5,9 @@ const { validateRegistration, validateIdParam } = require('../validations/user.v
 const router = Router();
 
 router.get("/", getAll);
-router.post("/", validateRegistration, createUser); // Pasa a auth como register cuando se implemente autenticación
-router.get("/profile", getProfile);
-router.put("/profile", updateProfile);
+router.post("/newUser", validateRegistration, createUser); // Pasa a auth como register cuando se implemente autenticación
+router.post("/login", getProfile);
+router.put("/profile/:id", validateIdParam, updateProfile);
 router.delete("/:id", validateIdParam, deleteUser);
 
 module.exports = router;
