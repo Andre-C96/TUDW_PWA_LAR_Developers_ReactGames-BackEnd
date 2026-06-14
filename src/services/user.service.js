@@ -73,7 +73,44 @@ async function updateUserProfileService(userId, profileData) {
     return updatedUser;
 }
 
-async function deleteUserService(userId) { }
+async function deleteUserService({ id, email }) { 
+    const condicionesBusqueda = [];
+
+    if (id) {
+        condicionesBusqueda.push({ id: Number(id) }); 
+    }
+    
+    if (email) {
+        condicionesBusqueda.push({ email: email.trim().toLowerCase() }); 
+    }
+
+    if (condicionesBusqueda.length === 0) {
+        const error = new Error('An ID or Email is required to delete a user');
+        error.status = 400;
+        throw error;
+    }
+
+    const existUser = await prisma.user.findFirst({ 
+        where: { 
+            OR: condicionesBusqueda,
+            deletedAt: null 
+        } 
+    });
+
+    if (!existUser) {
+        const error = new Error('User not found or already deleted');
+        error.status = 404;
+        throw error;
+    }
+
+    const deletedUser = await prisma.user.update({
+        where: { id: existUser.id },
+        data: { deletedAt: new Date() },
+        select: { id: true, email: true, deletedAt: true }
+    });
+
+    return deletedUser;
+}
 
 async function createUserService(userData) {
 

@@ -8,6 +8,6 @@ router.get("/", getAll);
 router.post("/newUser", validateRegistration, createUser); // Pasa a auth como register cuando se implemente autenticación
 router.post("/login", getProfile);
 router.put("/profile/:id", validateIdParam, updateProfile);
-router.delete("/:id", validateIdParam, deleteUser);
+router.delete("/", deleteUser);
 
 module.exports = router;
