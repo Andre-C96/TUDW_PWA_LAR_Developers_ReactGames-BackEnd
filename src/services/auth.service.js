@@ -1,0 +1,122 @@
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const authConfig = require('../config/auth'); 
+
+const registerAuthService = async (userData) => {
+  const existingUser = await prisma.user.findUnique({
+    where: { email: userData.email },
+  });
+
+  if (existingUser) {
+    const error = new Error('El email ya se encuentra registrado');
+    error.status = 400;
+    throw error;
+  }
+
+  // Intalar bcrypt!!!
+  const hashedPassword = await bcrypt.hash(userData.password, authConfig.bcryptSaltRounds);
+
+  const newUser = await prisma.user.create({
+    data: {
+      email: userData.email,
+      password: hashedPassword,
+      role: userData.role || 'USUARIO',
+    },
+  });
+
+  return {
+    id: newUser.id,
+    email: newUser.email,
+    role: newUser.role,
+  };
+};
+
+const loginAuthService = async (credentials) => {
+  const user = await prisma.user.findUnique({
+    where: { email: credentials.email },
+  });
+
+  if (!user) {
+    const error = new Error('Credenciales inválidas');
+    error.status = 401;
+    throw error;
+  }
+
+  const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+
+  if (!isPasswordValid) {
+    const error = new Error('Credenciales inválidas');
+    error.status = 401;
+    throw error;
+  }
+
+
+  const accessToken = jwt.sign(
+    { id: user.id, email: user.email, role: user.role },
+    authConfig.accessTokenSecret,
+    { expiresIn: authConfig.accessTokenExpiry }
+  );
+
+  const refreshToken = jwt.sign(
+    { id: user.id }, 
+    authConfig.refreshTokenSecret,
+    { expiresIn: authConfig.refreshTokenExpiry }
+  );
+
+  // RefreshToken en BD
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { refreshToken: refreshToken },
+  });
+
+  return {
+    user: { id: user.id, email: user.email, role: user.role },
+    accessToken,
+    refreshToken,
+  };
+};
+
+const refreshAuthService = async (oldRefreshToken) => {
+  try {
+    
+    const decoded = jwt.verify(oldRefreshToken, authConfig.refreshTokenSecret);
+
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.id },
+    });
+
+    if (!user || user.refreshToken !== oldRefreshToken) {
+      throw new Error();
+    }
+
+    const newAccessToken = jwt.sign(
+      { id: user.id, email: user.email, role: user.role },
+      authConfig.accessTokenSecret,
+      { expiresIn: authConfig.accessTokenExpiry }
+    );
+
+    return { accessToken: newAccessToken };
+  } catch (err) {
+    const error = new Error('Refresh token inválido o expirado');
+    error.status = 403; 
+    throw error;
+  }
+};
+
+const logoutAuthService = async (userId) => {
+  await prisma.user.update({
+    where: { id: userId },
+    data: { refreshToken: null },
+  });
+  
+  return true;
+};
+
+module.exports = {
+  registerAuthService,
+  loginAuthService,
+  refreshAuthService,
+  logoutAuthService,
+};
