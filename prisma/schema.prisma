@@ -27,6 +27,8 @@ model user {
   updatedAt     DateTime @updatedAt
   deletedAt     DateTime? 
   favorites     favorite[]
+
+  @@map("user")
   
 }
 
