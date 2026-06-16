@@ -84,6 +84,47 @@ const getBoardgameByIdService = async (id, language = DEFAULT_LANGUAGE) => {
   return formatBoardgame(boardgame, language);
 };
 
+const getBoardgameByQueryService = async (query, language = DEFAULT_LANGUAGE) => {
+  const cleanQuery = query.trim();
+  
+  // El % al final significa: "Busca que empiece con estas letras y no importa lo que siga"
+  const searchPattern = `${cleanQuery}%`; 
+
+  // Ejecutamos el SQL nativo para traer TODOS los registros que coincidan
+  const boardgames = await prisma.$queryRaw`
+    SELECT DISTINCT b.*
+    FROM "boardgame" b
+    INNER JOIN "boardgameTranslation" bt ON bt."boardgameId" = b.id
+    WHERE b."deletedAt" IS NULL
+      AND (
+        -- Trae todos los nombres que empiecen con esas letras
+        bt.name ILIKE ${searchPattern}
+        
+        OR 
+        
+        -- Trae todos los juegos donde alguna categoría empiece con esas letras
+        EXISTS (
+          SELECT 1 
+          FROM unnest(bt.category) AS cat 
+          WHERE cat ILIKE ${searchPattern}
+        )
+      )
+  `;
+
+  // Adjuntamos sus traducciones de forma eficiente para el formateador
+  const boardgamesWithTranslations = await Promise.all(
+    boardgames.map(async (bg) => {
+      const translations = await prisma.boardgameTranslation.findMany({
+        where: { boardgameId: bg.id }
+      });
+      return { ...bg, boardgameTranslations: translations };
+    })
+  );
+
+  return boardgamesWithTranslations.map((bg) => formatBoardgame(bg, language));
+};
+
+
 // Crear
 const createBoardgameService = async (data, language = DEFAULT_LANGUAGE) => {
   const newBoardgame = await prisma.boardgame.create({
@@ -203,5 +244,6 @@ module.exports = {
   createBoardgameService,
   updateBoardgameService,
   deleteBoardgameService,
-  restoreBoardgameService
+  restoreBoardgameService,
+  getBoardgameByQueryService
 };

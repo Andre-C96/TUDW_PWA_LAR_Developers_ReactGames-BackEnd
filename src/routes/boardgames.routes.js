@@ -6,18 +6,23 @@ const {
     createBoardgameController,
     updateBoardgameController,
     deleteBoardgameController,
-    restoreBoardgameController
+    restoreBoardgameController,
+    getBoardgameByQueryController
 } = require('../controllers/boardgames.controller');
 
 const {
     validateBoardgameData,
     validateBoardgameId,
+    validateBoardgameSearchQuery
 } = require('../validations/boardgames.validation');
 
 const router = Router();
 
 router.get('/', getBoardgamesController);
+router.get('/search', validateBoardgameSearchQuery, getBoardgameByQueryController);
+
 router.get('/:id', validateBoardgameId, getBoardgameByIdController);
+
 
 router.post('/', validateBoardgameData, createBoardgameController);
 
