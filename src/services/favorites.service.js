@@ -1,7 +1,6 @@
 const prisma = require('../prisma/prisma');
 
 const DEFAULT_LANGUAGE = 'es';
-const DEFAULT_USER_ID = 1;
 
 const selectLocalizedTranslation = (translations, language) => {
   if (!Array.isArray(translations) || translations.length === 0) {
@@ -40,9 +39,7 @@ const formatFavorite = (favorite, language) => {
 
 const getFavoritesService = async (language = DEFAULT_LANGUAGE) => {
   const favorites = await prisma.favorite.findMany({
-    where: {
-      userId: DEFAULT_USER_ID,
-    },
+
     orderBy: {
       createdAt: 'desc',
     },
@@ -63,7 +60,6 @@ const getFavoriteByIdService = async (id, language = DEFAULT_LANGUAGE) => {
   const favorite = await prisma.favorite.findFirst({
     where: {
       id: Number(id),
-      userId: DEFAULT_USER_ID,
     },
     include: {
       user: true,
@@ -85,7 +81,7 @@ const getFavoriteByIdService = async (id, language = DEFAULT_LANGUAGE) => {
 };
 
 const createFavoriteService = async (data,language = DEFAULT_LANGUAGE) => {
-  const userId = DEFAULT_USER_ID;
+  const userId = Number(data.userId);
   const boardgameId = Number(data.boardgameId);
 
   const existingUser = await prisma.user.findUnique({
@@ -145,7 +141,6 @@ const deleteFavoriteService = async (id, language = DEFAULT_LANGUAGE) => {
   const favorite = await prisma.favorite.findFirst({
     where: {
       id: Number(id),
-      userId: DEFAULT_USER_ID,
     },
     include: {
       user: true,
