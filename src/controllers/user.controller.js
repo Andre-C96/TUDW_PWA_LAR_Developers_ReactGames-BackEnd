@@ -51,7 +51,10 @@ const updateProfile = async (req, res) => {
             data: updatedUser
         });
     } catch (error) {
-        res.status(error.status || 500).json({ error: error.message });
+        res.status(error.status || 500).json({ 
+            success: false,
+            message: error.message 
+        });
     }
 }
 const deleteUser = async (req, res) => {
@@ -60,7 +63,7 @@ const deleteUser = async (req, res) => {
         if (!id && !email) {
             return res.status(400).json({
                 success: false,
-                message: "You must provide either an ?id= or an ?email= query parameter."
+                message: "User ID or email is required to delete a user"
             });
         }
         await deleteUserService({ id, email });
@@ -70,7 +73,10 @@ const deleteUser = async (req, res) => {
             message: 'User deleted successfully'
         });
     } catch (error) {
-        res.status(error.status || 500).json({ error: error.message });
+        res.status(error.status || 500).json({ 
+            success: false,
+            message: error.message 
+        });
     }
  }
 
@@ -83,7 +89,10 @@ const createUser = async (req, res) => {
             data: newUser
         });
     } catch (error) {
-        res.status(error.status || 500).json({ error: error.message });
+        res.status(error.status || 500).json({ 
+            success: false,
+            message: error.message 
+            });
     }
 }
 
