@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 
 const boardgamesRoutes = require('./routes/boardgames.routes');
 const favoritesRoutes = require('./routes/favorites.routes');
@@ -8,6 +9,7 @@ const notFoundMiddleware = require('./middlewares/not-found');
 const errorHandlerMiddleware = require('./middlewares/error-handler');
 
 const app = express();
+app.use(cors());
 
 app.use(express.json());
 

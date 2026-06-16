@@ -1,5 +1,5 @@
 const prisma = require('../prisma/prisma');
-const bcrypt = require("bcrypt");
+// bcrypt = require("bcrypt");
 
 async function getAllUsersService() {
     return await prisma.user.findMany({
@@ -20,7 +20,7 @@ async function getUserLoginService({ email, password }) {
     }
 
 
-    const valid = await bcrypt.compare(password, user.password);
+    const valid = (password, user.password);
     if (!valid) {
         const error = new Error("Credenciales inválidas");
         error.status = 401;
