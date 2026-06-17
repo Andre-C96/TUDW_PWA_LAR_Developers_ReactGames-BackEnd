@@ -20,7 +20,7 @@ async function getUserLoginService({ email, password }) {
     }
 
 
-    const valid = (password, user.password);
+    const valid = (password === user.password);
     if (!valid) {
         const error = new Error("Credenciales inválidas");
         error.status = 401;
