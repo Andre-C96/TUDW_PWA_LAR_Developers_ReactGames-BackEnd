@@ -5,6 +5,7 @@
 
 generator client {
   provider = "prisma-client-js"
+
 }
 
 datasource db {
@@ -26,6 +27,8 @@ model user {
   updatedAt     DateTime @updatedAt
   deletedAt     DateTime? 
   favorites     favorite[]
+
+  @@map("user")
   
 }
 
