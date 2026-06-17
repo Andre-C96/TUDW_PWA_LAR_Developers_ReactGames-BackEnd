@@ -18,11 +18,22 @@ const {
 
 const router = Router();
 
+/**
+ * @openapi
+ * /boardgames:
+ *  get:
+ *    summary: Obtiene todos los juegos de mesa
+ *    responses:
+ *      200:
+ *        description: Muestra los primeros 15 juegos de mesa devueltos con éxito.
+ *      404:
+ *        description: No se encontraron juegos de mesa.
+ */
 router.get('/', getBoardgamesController);
+
 router.get('/search', validateBoardgameSearchQuery, getBoardgameByQueryController);
 
 router.get('/:id', validateBoardgameId, getBoardgameByIdController);
-
 
 router.post('/', validateBoardgameData, createBoardgameController);
 

@@ -8,6 +8,8 @@ const userRoutes = require('./routes/user.routes');
 const notFoundMiddleware = require('./middlewares/not-found');
 const errorHandlerMiddleware = require('./middlewares/error-handler');
 
+const swaggerDocs = require('../config/swagger');
+
 const app = express();
 app.use(cors());
 
@@ -16,6 +18,8 @@ app.use('/api', healthRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/favorites', favoritesRoutes);
 app.use('/api/boardgames', boardgamesRoutes);
+
+swaggerDocs(app);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
