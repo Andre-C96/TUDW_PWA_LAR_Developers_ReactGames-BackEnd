@@ -1,6 +1,3 @@
-const swaggerJsdoc = require('swagger-jsdoc');
-const swaggerUi = require('swagger-ui-express');
-
 const options = {
   definition: {
     openapi: '3.0.0',
@@ -12,17 +9,12 @@ const options = {
     servers: [
       {
         url: 'https://tudw-pwa-lar-developers-react-games.vercel.app/api',
-        description: 'Servidor Local',
+        description: 'Vercel Deployment',
       },
     ],
   },
   apis: ['./src/routes/*.routes.js'], 
 };
 
-const swaggerSpec = swaggerJsdoc(options);
 
-const swaggerDocs = (app) => {
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-};
-
-module.exports = swaggerDocs;
+module.exports = options;
