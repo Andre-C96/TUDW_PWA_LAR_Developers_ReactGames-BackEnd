@@ -73,7 +73,7 @@ Para de esta manera poblar las tablas con los usuarios base y la ludoteca de jue
 ### 6. Documentación de la API (Swagger / Apidog) y Credenciales de Prueba
 La API expone dos entornos de documentación y pruebas para validar el comportamiento de los endpoints, headers y respuestas HTTP directamente desde la nube o de forma local.
 
-Ruta de Swagger: [COMPLETAR]
+Ruta de Swagger: [http://localhost:3001/api-docs/#/Boardgame/get_boardgames_search]
 
 Espacio de trabajo en Apidog: [https://app.apidog.com/invite?token=0UDCA9GFzbotH0_10_By9] 
 (Reemplaza el uso de Postman para el diseño y testing automatizado de las respuestas JSON).
