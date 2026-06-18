@@ -7,26 +7,23 @@ async function getAllUsersService() {
     });
 }
 async function getUserLoginService({ email, password }) {
-
-    const user = await prisma.user.findUnique({ 
-        where: { email: email.trim().toLowerCase() } 
+    const user = await prisma.user.findUnique({
+        where: { email: email.trim().toLowerCase() }
     });
 
-  
     if (!user) {
-        const error = new Error("Credenciales inválidas");
+        const error = new Error("Invalid credentials");
         error.status = 401;
         throw error;
     }
-
 
     const valid = await bcrypt.compare(password, user.password);
+
     if (!valid) {
-        const error = new Error("Credenciales inválidas");
+        const error = new Error("Invalid credentials");
         error.status = 401;
         throw error;
     }
-
 
     return user;
 }
@@ -73,15 +70,15 @@ async function updateUserProfileService(userId, profileData) {
     return updatedUser;
 }
 
-async function deleteUserService({ id, email }) { 
+async function deleteUserService({ id, email }) {
     const condicionesBusqueda = [];
 
     if (id) {
-        condicionesBusqueda.push({ id: Number(id) }); 
+        condicionesBusqueda.push({ id: Number(id) });
     }
-    
+
     if (email) {
-        condicionesBusqueda.push({ email: email.trim().toLowerCase() }); 
+        condicionesBusqueda.push({ email: email.trim().toLowerCase() });
     }
 
     if (condicionesBusqueda.length === 0) {
@@ -90,11 +87,11 @@ async function deleteUserService({ id, email }) {
         throw error;
     }
 
-    const existUser = await prisma.user.findFirst({ 
-        where: { 
+    const existUser = await prisma.user.findFirst({
+        where: {
             OR: condicionesBusqueda,
-            deletedAt: null 
-        } 
+            deletedAt: null
+        }
     });
 
     if (!existUser) {
