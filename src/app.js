@@ -18,12 +18,24 @@ const app = express();
 app.use(cors());
 
 app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: "¡Bienvenido a la API de Boardgames! El backend está funcionando correctamente.",
+    endpoints: {
+      boardgames: "/api/boardgames",
+      favorites: "/api/favorites",
+      user: "/api/user",
+      docs: "/api-docs"
+    }
+  });
+});
+
 app.use('/api', healthRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/favorites', favoritesRoutes);
 app.use('/api/boardgames', boardgamesRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
 
 
 app.use(notFoundMiddleware);
