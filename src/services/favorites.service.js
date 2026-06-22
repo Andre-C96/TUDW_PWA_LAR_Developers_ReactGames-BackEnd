@@ -37,9 +37,11 @@ const formatFavorite = (favorite, language) => {
   };
 };
 
-const getFavoritesService = async (language = DEFAULT_LANGUAGE) => {
+const getFavoritesService = async (userId, language = DEFAULT_LANGUAGE) => {
   const favorites = await prisma.favorite.findMany({
-
+    where: {
+      userId: Number(userId),
+    },
     orderBy: {
       createdAt: 'desc',
     },
@@ -80,7 +82,7 @@ const getFavoriteByIdService = async (id, language = DEFAULT_LANGUAGE) => {
   return formatFavorite(favorite, language);
 };
 
-const createFavoriteService = async (data,language = DEFAULT_LANGUAGE) => {
+const createFavoriteService = async (data, language = DEFAULT_LANGUAGE) => {
   const userId = Number(data.userId);
   const boardgameId = Number(data.boardgameId);
 
@@ -129,7 +131,7 @@ const createFavoriteService = async (data,language = DEFAULT_LANGUAGE) => {
       user: true,
       boardgame: {
         include: {
-          boardgameTranslations: true 
+          boardgameTranslations: true
         }
       },
     },
@@ -137,10 +139,11 @@ const createFavoriteService = async (data,language = DEFAULT_LANGUAGE) => {
   return formatFavorite(newFavorite, language);
 };
 
-const deleteFavoriteService = async (id, language = DEFAULT_LANGUAGE) => {
+const deleteFavoriteService = async (id, userId, language = DEFAULT_LANGUAGE) => {
   const favorite = await prisma.favorite.findFirst({
     where: {
       id: Number(id),
+      userId: Number(userId),
     },
     include: {
       user: true,
