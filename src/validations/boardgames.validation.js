@@ -53,7 +53,7 @@ const validateBoardgameData = (req, res, next) => {
 };
 
 // ID
-const validateBoardgameId = (req, res, next) => {
+const   validateBoardgameId = (req, res, next) => {
     const { id } = req.params;
 
     const boardgameId = Number(id);
@@ -68,4 +68,16 @@ const validateBoardgameId = (req, res, next) => {
     next();
 };
 
-module.exports = { validateBoardgameData, validateBoardgameId };
+const validateBoardgameSearchQuery = (req, res, next) => {
+    const { query } = req.query;
+
+    if (!query || typeof query !== 'string' || query.trim() === '') {
+        return res.status(400).json({
+            success: false,
+            message: 'You must provide a valid string in the query parameter (e.g., ?query=catan).'
+        });
+    }
+    next();
+};
+
+module.exports = { validateBoardgameData, validateBoardgameId, validateBoardgameSearchQuery };

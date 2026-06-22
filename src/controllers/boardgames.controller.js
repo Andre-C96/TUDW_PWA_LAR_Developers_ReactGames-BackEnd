@@ -4,13 +4,14 @@ const {
     createBoardgameService,
     updateBoardgameService,
     deleteBoardgameService,
-    restoreBoardgameService
+    restoreBoardgameService,
+    getBoardgameByQueryService
 } = require('../services/boardgames.service');
 
 
 const getBoardgamesController = async (req, res) => {
     try {
-        
+
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 15;
 
@@ -18,8 +19,8 @@ const getBoardgamesController = async (req, res) => {
 
         return res.status(200).json({
             success: true,
-            meta: result.meta, 
-            data: result.data, 
+            meta: result.meta,
+            data: result.data,
         });
     } catch (error) {
         return res.status(error.status || 500).json({
@@ -39,6 +40,24 @@ const getBoardgameByIdController = async (req, res) => {
         return res.status(200).json({
             success: true,
             data: boardgame,
+        });
+    } catch (error) {
+        return res.status(error.status || 500).json({
+            success: false,
+            error: error.message || 'Internal server error',
+        });
+    }
+};
+
+const getBoardgameByQueryController = async (req, res) => { 
+    try {
+        const { query, language } = req.query; 
+
+        const boardgames = await getBoardgameByQueryService(query, language);
+
+        return res.status(200).json({
+            success: true,
+            data: boardgames,
         });
     } catch (error) {
         return res.status(error.status || 500).json({
@@ -135,5 +154,6 @@ module.exports = {
     createBoardgameController,
     updateBoardgameController,
     deleteBoardgameController,
-    restoreBoardgameController
+    restoreBoardgameController,
+    getBoardgameByQueryController
 };

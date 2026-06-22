@@ -5,7 +5,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+
 }
 
 datasource db {
@@ -27,6 +27,8 @@ model user {
   updatedAt     DateTime @updatedAt
   deletedAt     DateTime? 
   favorites     favorite[]
+
+  @@map("user")
   
 }
 
