@@ -10,7 +10,7 @@ const registerController = async (req, res) => {
     const newUser = await registerAuthService(req.body);
     return res.status(201).json({
       success: true,
-      message: 'Usuario registrado con éxito',
+      message: 'User successfully registered',
       data: newUser,
     });
   } catch (error) {
@@ -23,7 +23,7 @@ const loginController = async (req, res) => {
     const loginData = await loginAuthService(req.body);
     return res.status(200).json({
       success: true,
-      message: 'Login exitoso',
+      message: 'Login successful',
       data: loginData, 
     });
   } catch (error) {
@@ -36,14 +36,14 @@ const refreshController = async (req, res) => {
     const { refreshToken } = req.body;
     
     if (!refreshToken) {
-      return res.status(400).json({ success: false, message: 'Refresh token requerido' });
+      return res.status(400).json({ success: false, message: 'Refresh token required' });
     }
 
     const tokens = await refreshAuthService(refreshToken);
     
     return res.status(200).json({
       success: true,
-      message: 'Token renovado',
+      message: 'Token refreshed successfully',
       data: tokens,
     });
   } catch (error) {
@@ -60,7 +60,7 @@ const logoutController = async (req, res) => {
     
     return res.status(200).json({
       success: true,
-      message: 'Sesión cerrada con éxito',
+      message: 'Session closed successfully',
     });
   } catch (error) {
     return res.status(error.status || 500).json({ success: false, message: error.message });

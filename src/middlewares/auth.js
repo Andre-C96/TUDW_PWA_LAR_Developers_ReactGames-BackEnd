@@ -5,9 +5,9 @@ const authenticate = (req, res, next) => {
   const authHeader = req.headers.authorization;
   
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({
+    return res.status(403).json({
       success: false,
-      message: 'Token no proporcionado o formato inválido',
+      message: 'Token not provided or invalid format',
     });
   }
 
@@ -20,9 +20,9 @@ const authenticate = (req, res, next) => {
     next();
 
   } catch (error) {
-    return res.status(401).json({
+    return res.status(403).json({
       success: false,
-      message: 'Token inválido o expirado',
+      message: 'Token invalid or expired',
     });
   }
 };
@@ -31,7 +31,7 @@ const authorizeAdmin = (req, res, next) => {
   if (!req.user || req.user.role !== 'ADMIN') {
     return res.status(403).json({
       success: false,
-      message: 'Acceso denegado: se requiere rol ADMIN',
+      message: 'Access denied: ADMIN role required',
     });
   }
   next();
