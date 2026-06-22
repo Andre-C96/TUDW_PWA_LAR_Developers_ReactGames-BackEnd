@@ -4,14 +4,14 @@ const validateRegisterData = (req, res, next) => {
   if (!email || email.trim() === '') {
     return res.status(400).json({
       success: false,
-      message: 'El email es obligatorio',
+      message: 'The email is required',
     });
   }
 
   if (!password || password.trim() === '') {
     return res.status(400).json({
       success: false,
-      message: 'La contraseña es obligatoria',
+      message: 'The password is required',
     });
   }
 
@@ -24,7 +24,7 @@ const validateLoginData = (req, res, next) => {
   if (!email || !password) {
     return res.status(400).json({
       success: false,
-      message: 'Email y contraseña son obligatorios para ingresar',
+      message: 'Email and password are required to log in',
     });
   }
 
@@ -37,7 +37,7 @@ const validateRefreshData = (req, res, next) => {
   if (!refreshToken || refreshToken.trim() === '') {
     return res.status(400).json({
       success: false,
-      message: 'El Refresh Token es obligatorio',
+      message: 'The Refresh Token is required',
     });
   }
 

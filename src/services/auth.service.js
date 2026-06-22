@@ -10,12 +10,11 @@ const registerAuthService = async (userData) => {
   });
 
   if (existingUser) {
-    const error = new Error('El email ya se encuentra registrado');
-    error.status = 400;
+    const error = new Error('The email is already registered');
+    error.status = 409;
     throw error;
   }
 
-  // Intalar bcrypt!!!
   const hashedPassword = await bcrypt.hash(userData.password, authConfig.bcryptSaltRounds);
 
   const newUser = await prisma.user.create({
@@ -39,7 +38,7 @@ const loginAuthService = async (credentials) => {
   });
 
   if (!user) {
-    const error = new Error('Credenciales inválidas');
+    const error = new Error('Invalid credentials');
     error.status = 401;
     throw error;
   }
@@ -47,7 +46,7 @@ const loginAuthService = async (credentials) => {
   const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
 
   if (!isPasswordValid) {
-    const error = new Error('Credenciales inválidas');
+    const error = new Error('Invalid credentials');
     error.status = 401;
     throw error;
   }
@@ -99,7 +98,7 @@ const refreshAuthService = async (oldRefreshToken) => {
 
     return { accessToken: newAccessToken };
   } catch (err) {
-    const error = new Error('Refresh token inválido o expirado');
+    const error = new Error('Refresh token invalid or expired');
     error.status = 403; 
     throw error;
   }
