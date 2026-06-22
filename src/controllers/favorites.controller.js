@@ -11,7 +11,8 @@ const getLanguageFromQuery = (req) => req.query.language || DEFAULT_LANGUAGE;
 
 const getFavoritesController = async (req, res) => {
   try {
-    const favorites = await getFavoritesService(getLanguageFromQuery(req));
+    const userId = req.user.id;
+    const favorites = await getFavoritesService(userId, getLanguageFromQuery(req));
 
     return res.status(200).json({
       success: true,
@@ -41,7 +42,8 @@ const getFavoriteByIdController = async (req, res) => {
 
 const createFavoriteController = async (req, res) => {
   try {
-     const favorite = await createFavoriteService(req.body, getLanguageFromQuery(req));
+    const userId = req.user.id;
+    const favorite = await createFavoriteService({ ...req.body, userId }, getLanguageFromQuery(req));
 
     return res.status(201).json({
       success: true,
@@ -57,7 +59,8 @@ const createFavoriteController = async (req, res) => {
 
 const deleteFavoriteController = async (req, res) => {
   try {
-    const favorite = await deleteFavoriteService(req.params.id, getLanguageFromQuery(req));
+    const userId = req.user.id;
+    const favorite = await deleteFavoriteService(req.params.id, userId, getLanguageFromQuery(req));
 
     return res.status(200).json({
       success: true,
