@@ -6,14 +6,14 @@ async function getAllUsersService() {
         select: { id: true, email: true, role: true, createdAt: true, updatedAt: true },
     });
 }
-async function getUserLoginService({ email, password }) {
+async function getProfileService({ userId }) {
     const user = await prisma.user.findUnique({
-        where: { email: email.trim().toLowerCase() }
+        where: { id: userId, deletedAt: null }
     });
 
     if (!user) {
-        const error = new Error("Invalid credentials");
-        error.status = 401;
+        const error = new Error("User not found");
+        error.status = 404;
         throw error;
     }
 
@@ -69,7 +69,6 @@ async function updateUserProfileService(userId, profileData) {
 
     return updatedUser;
 }
-
 async function deleteUserService({ id, email }) {
     const condicionesBusqueda = [];
 
@@ -109,36 +108,9 @@ async function deleteUserService({ id, email }) {
     return deletedUser;
 }
 
-async function createUserService(userData) {
-
-    const { email, password, role } = userData;
-    const existing = await prisma.user.findUnique({ where: { email } });
-    if (existing) {
-        const error = new Error('The email is already registered');
-        error.status = 409;
-        throw error;
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await prisma.user.create({
-        data: {
-            email,
-            password: hashedPassword,
-            role: role || "USUARIO",
-        },
-    });
-
-    return {
-        user: { id: user.id, email: user.email, role: user.role }
-    };
-}
-
-
 module.exports = {
     getAllUsersService,
-    getUserLoginService,
+    getProfileService,
     updateUserProfileService,
     deleteUserService,
-    createUserService
 };

@@ -1,13 +1,12 @@
 const { Router } = require('express');
-
 const { getAll, createUser, getProfile, updateProfile, deleteUser } = require('../controllers/user.controller');
-const { validateRegistration, validateIdParam } = require('../validations/user.validation');
+const { validateIdParam } = require('../validations/user.validation');
+const { authenticate} = require('../middlewares/auth');
+
 const router = Router();
 
-router.get("/", getAll);
-router.post("/newUser", validateRegistration, createUser); // Pasa a auth como register cuando se implemente autenticación
-router.post("/login", getProfile);
-router.put("/profile/:id", validateIdParam, updateProfile);
-router.delete("/", deleteUser);
-
+router.get("/", authenticate, getAll);
+router.get("/profile", authenticate, getProfile);
+router.put("/profile/:id", authenticate, validateIdParam, updateProfile);
+router.delete("/", authenticate, deleteUser);
 module.exports = router;

@@ -7,6 +7,7 @@ const boardgamesRoutes = require('./routes/boardgames.routes');
 const favoritesRoutes = require('./routes/favorites.routes');
 const healthRoutes = require('./routes/health.routes');
 const userRoutes = require('./routes/user.routes');
+const authRoutes = require('./routes/auth.routes');
 const notFoundMiddleware = require('./middlewares/not-found');
 const errorHandlerMiddleware = require('./middlewares/error-handler');
 
@@ -32,6 +33,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', healthRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/favorites', favoritesRoutes);
 app.use('/api/boardgames', boardgamesRoutes);

@@ -13,16 +13,10 @@ const getAll = async (req, res) => {
 };
 const getProfile = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const userId = req.user.id;
+        
 
-        if (!email || !password) {
-            return res.status(400).json({
-                success: false,
-                message: "Email and password are required"
-            });
-        }
-
-        const user = await getUserLoginService({ email, password });
+        const user = await getProfileService({ userId });
 
         return res.status(200).json({
             success: true,
@@ -40,7 +34,7 @@ const getProfile = async (req, res) => {
             message: error.message
         });
     }
-};// Pasa a auth como register cuando se implemente autenticación
+};
 const updateProfile = async (req, res) => {
     try {
         const userId = Number(req.params.id);
@@ -80,25 +74,8 @@ const deleteUser = async (req, res) => {
     }
  }
 
-const createUser = async (req, res) => {
-    try {
-        const userData = req.body;
-        const newUser = await createUserService(userData);
-        return res.status(201).json({
-            success: true,
-            data: newUser
-        });
-    } catch (error) {
-        res.status(error.status || 500).json({ 
-            success: false,
-            message: error.message 
-            });
-    }
-}
-
 module.exports = {
     getAll,
-    createUser,
     getProfile,
     updateProfile,
     deleteUser
