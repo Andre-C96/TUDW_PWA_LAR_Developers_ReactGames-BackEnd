@@ -50,17 +50,16 @@ const loginAuthService = async (credentials) => {
     throw error;
   }
 
-
   const accessToken = jwt.sign(
     { id: user.id, email: user.email, role: user.role },
     authConfig.accessTokenSecret,
-    { expiresIn: authConfig.accessTokenExpiry }
+    { expiresIn: authConfig.accessTokenExpiry || '60m' }
   );
 
   const refreshToken = jwt.sign(
     { id: user.id }, 
     authConfig.refreshTokenSecret,
-    { expiresIn: authConfig.refreshTokenExpiry }
+    { expiresIn: authConfig.refreshTokenExpiry || '7d' }
   );
 
   // RefreshToken en BD
