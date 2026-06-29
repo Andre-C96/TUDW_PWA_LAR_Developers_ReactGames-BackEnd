@@ -59,7 +59,7 @@ git checkout developer
 ### 3. Configurar las Variables de Entorno
 Cree un archivo llamado .env en la raíz del proyecto basándose en el siguiente esquema obligatorio:
 PORT=30001
-DATABASE_URL="postgresql://neondb_owner:npg_4csaHX0EfdwT@ep-icy-cherry-acndcpgq-pooler.sa-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+DATABASE_URL= Consultar a LAR developers
 
 ### 4. Ejecutar Migraciones de Prisma
 Para impactar la estructura del modelo y mapear las tablas en su base de datos local o remota, ejecute:
@@ -73,7 +73,7 @@ Para de esta manera poblar las tablas con los usuarios base y la ludoteca de jue
 ### 6. Documentación de la API (Swagger / Apidog) y Credenciales de Prueba
 La API expone dos entornos de documentación y pruebas para validar el comportamiento de los endpoints, headers y respuestas HTTP directamente desde la nube o de forma local.
 
-Ruta de Swagger: [http://localhost:3001/api-docs/#/Boardgame/get_boardgames_search]
+Ruta de Swagger: [http://localhost:3001/api-docs]
 
 Espacio de trabajo en Apidog: [https://app.apidog.com/invite?token=0UDCA9GFzbotH0_10_By9] 
 (Reemplaza el uso de Postman para el diseño y testing automatizado de las respuestas JSON).
@@ -82,9 +82,12 @@ Espacio de trabajo en Apidog: [https://app.apidog.com/invite?token=0UDCA9GFzbotH
 Para testear aquellos endpoints que requieran autenticación o un estado de sesión activo (como la gestión de listas de favoritos o flujos protegidos), utilice las siguientes credenciales pre-cargadas mediante el script de seed:
 
 Correo Electrónico: tester@lar.com
-
 Contraseña: 1111
 
+Para testear modificaciones, eliminado o carga de elementos utilice las siguientes credenciales:
+ADMIN:
+Correo Electrónico: messi@lar.com
+Constraseña: 1234
 
 
 
