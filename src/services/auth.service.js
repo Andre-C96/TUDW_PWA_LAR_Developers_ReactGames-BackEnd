@@ -1,5 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require('../prisma/prisma');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const authConfig = require('../config/auth'); 
@@ -34,7 +33,7 @@ const registerAuthService = async (userData) => {
 
 const loginAuthService = async (credentials) => {
   const user = await prisma.user.findUnique({
-    where: { email: credentials.email },
+    where: { email: credentials.email, deletedAt: null },
   });
 
   if (!user) {
@@ -51,17 +50,16 @@ const loginAuthService = async (credentials) => {
     throw error;
   }
 
-
   const accessToken = jwt.sign(
     { id: user.id, email: user.email, role: user.role },
     authConfig.accessTokenSecret,
-    { expiresIn: authConfig.accessTokenExpiry }
+    { expiresIn: authConfig.accessTokenExpiry || '60m' }
   );
 
   const refreshToken = jwt.sign(
     { id: user.id }, 
     authConfig.refreshTokenSecret,
-    { expiresIn: authConfig.refreshTokenExpiry }
+    { expiresIn: authConfig.refreshTokenExpiry || '7d' }
   );
 
   // RefreshToken en BD
@@ -83,7 +81,7 @@ const refreshAuthService = async (oldRefreshToken) => {
     const decoded = jwt.verify(oldRefreshToken, authConfig.refreshTokenSecret);
 
     const user = await prisma.user.findUnique({
-      where: { id: decoded.id },
+      where: { id: decoded.id, deletedAt: null },
     });
 
     if (!user || user.refreshToken !== oldRefreshToken) {
