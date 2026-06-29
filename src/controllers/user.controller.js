@@ -1,4 +1,4 @@
-const { getAllUsersService, getUserLoginService, updateUserProfileService, deleteUserService,createUserService } = require("../services/user.service");
+const { getAllUsersService, getUserLoginService, updateUserProfileService, deleteUserService, createUserService } = require("../services/user.service");
 
 const getAll = async (req, res) => {
     try {
@@ -13,16 +13,10 @@ const getAll = async (req, res) => {
 };
 const getProfile = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const userId = req.user.id;
 
-        if (!email || !password) {
-            return res.status(400).json({
-                success: false,
-                message: "Email and password are required"
-            });
-        }
 
-        const user = await getUserLoginService({ email, password });
+        const user = await getProfileService({ userId });
 
         return res.status(200).json({
             success: true,
@@ -40,20 +34,33 @@ const getProfile = async (req, res) => {
             message: error.message
         });
     }
-};// Pasa a auth como register cuando se implemente autenticación
+};
 const updateProfile = async (req, res) => {
     try {
-        const userId = Number(req.params.id);
+        const idParam = Number(req.params.id);
+        const userLogged = req.user;
+
+        if (userLogged.id !== idParam && (!userLogged.role || userLogged.role.toUpperCase() !== 'ADMIN')) {
+            return res.status(403).json({
+                success: false,
+                message: "Authorization failed: You do not have permission to update this profile"
+            });
+        }
+
         const profileData = req.body;
-        const updatedUser = await updateUserProfileService(userId, profileData);
+        if (!userLogged.role || userLogged.role.toUpperCase() !== 'ADMIN') {
+            delete profileData.role;
+        }
+        const updatedUser = await updateUserProfileService(idParam, profileData);
         return res.status(200).json({
             success: true,
+            message: "Profile updated successfully",
             data: updatedUser
         });
     } catch (error) {
-        res.status(error.status || 500).json({ 
+        res.status(error.status || 500).json({
             success: false,
-            message: error.message 
+            message: error.message
         });
     }
 }
@@ -73,32 +80,15 @@ const deleteUser = async (req, res) => {
             message: 'User deleted successfully'
         });
     } catch (error) {
-        res.status(error.status || 500).json({ 
+        res.status(error.status || 500).json({
             success: false,
-            message: error.message 
+            message: error.message
         });
-    }
- }
-
-const createUser = async (req, res) => {
-    try {
-        const userData = req.body;
-        const newUser = await createUserService(userData);
-        return res.status(201).json({
-            success: true,
-            data: newUser
-        });
-    } catch (error) {
-        res.status(error.status || 500).json({ 
-            success: false,
-            message: error.message 
-            });
     }
 }
 
 module.exports = {
     getAll,
-    createUser,
     getProfile,
     updateProfile,
     deleteUser
