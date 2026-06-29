@@ -10,15 +10,16 @@ const {
   validateCreateFavorite,
   validateFavoriteIdParam,
 } = require('../validations/favorites.validation');
+const { authenticate } = require('../middlewares/auth');
 
 const router = Router();
 
-router.get('/', getFavoritesController);
+router.get('/', authenticate, getFavoritesController);
 
-router.get('/:id', validateFavoriteIdParam, getFavoriteByIdController);
+router.get('/:id', authenticate, validateFavoriteIdParam, getFavoriteByIdController);
 
-router.post('/', validateCreateFavorite, createFavoriteController);
+router.post('/', authenticate, validateCreateFavorite, createFavoriteController);
 
-router.delete('/:id', validateFavoriteIdParam, deleteFavoriteController);
+router.delete('/:id', authenticate, validateFavoriteIdParam, deleteFavoriteController);
 
 module.exports = router;

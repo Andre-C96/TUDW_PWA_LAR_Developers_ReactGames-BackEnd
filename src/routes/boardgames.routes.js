@@ -1,4 +1,5 @@
 const { Router } = require('express');
+const { authenticate, authorizeAdmin} = require('../middlewares/auth');
 
 const {
     getBoardgamesController,
@@ -53,12 +54,12 @@ router.get('/search', validateBoardgameSearchQuery, getBoardgameByQueryControlle
 
 router.get('/:id', validateBoardgameId, getBoardgameByIdController);
 
-router.post('/', validateBoardgameData, createBoardgameController);
+router.post('/', authenticate, authorizeAdmin, validateBoardgameData, createBoardgameController);
 
-router.put('/:id', validateBoardgameId, validateBoardgameData, updateBoardgameController);
+router.put('/:id', authenticate, authorizeAdmin, validateBoardgameId, validateBoardgameData, updateBoardgameController);
 
-router.delete('/:id', validateBoardgameId, deleteBoardgameController);
+router.delete('/:id', authenticate, authorizeAdmin, validateBoardgameId, deleteBoardgameController);
 
-router.patch('/:id/restore', validateBoardgameId, restoreBoardgameController);
+router.patch('/:id/restore', authenticate, authorizeAdmin, validateBoardgameId, restoreBoardgameController);
 
 module.exports = router;
