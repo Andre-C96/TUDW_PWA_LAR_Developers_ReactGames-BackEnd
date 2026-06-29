@@ -84,10 +84,8 @@ Para testear aquellos endpoints que requieran autenticación o un estado de sesi
 Correo Electrónico: tester@lar.com
 Contraseña: 1111
 
-Para testear modificaciones, eliminado o carga de elementos utilice las siguientes credenciales:
-ADMIN:
-Correo Electrónico: messi@lar.com
-Constraseña: 1234
+Para testear modificaciones, eliminado o carga de elementos solicite las credenciales de ADMIN a "LAR Developers"
+
 
 
 
