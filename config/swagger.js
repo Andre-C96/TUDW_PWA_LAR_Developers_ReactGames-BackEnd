@@ -6,15 +6,26 @@ const options = {
       version: '1.0.0',
       description: 'Documentación de la API para la gestión de juegos de mesa y favoritos',
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'Ingresa tu token JWT con el formato: Bearer <token>',
+        },
+      },
+    },
+    apis: ['./src/routes/*.routes.js'],
     servers: [
       {
         url: 'https://tudw-pwa-lar-developers-react-games.vercel.app/api',
         description: 'Vercel Deployment',
       },
     ],
-  },
-  apis: ['./src/routes/*.routes.js'], 
-};
 
+  },
+  apis: ['./src/routes/*.routes.js'],
+};
 
 module.exports = options;
